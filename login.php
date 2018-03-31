@@ -21,6 +21,9 @@ if(isset($_SESSION["idUsuario"])){
 
 
     <!-- Bootstrap core CSS     -->
+    
+    
+    
     <link href="./assets/css/bootstrap.min.css" rel="stylesheet" />
 
     <!-- Animation library for notifications   -->
@@ -32,7 +35,7 @@ if(isset($_SESSION["idUsuario"])){
     <link href="./assets/css/pe-icon-7-stroke.css" rel="stylesheet" />
 
         <!--   Core JS Files   -->
-        <script src="./assets/js/jquery.3.2.1.min.js" type="text/javascript"></script>
+    <script src="./assets/js/jquery.3.2.1.min.js" type="text/javascript"></script>
 	<script src="./assets/js/bootstrap.min.js" type="text/javascript"></script>
 
 	<!--  Charts Plugin -->
@@ -87,7 +90,5 @@ if(isset($_SESSION["idUsuario"])){
         <div class='col-md-4'></div>
 
 </body>
-
-
 
 </html>
