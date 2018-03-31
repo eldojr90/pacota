@@ -1,4 +1,4 @@
-#PACOTA
+# PACOTA
 
 Pequena aplicação web para gerenciamento de comissões.
 
