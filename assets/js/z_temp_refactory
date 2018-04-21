@@ -1,0 +1,23 @@
+PÁGINA HOME
+
+                            PARAMETRO   VALOR       CONTROLLER
+
+FUNCTION DATE
+
+MES CORRENTE                fmc         "%m/%Y"     atualizaDataHora.php
+ANO CORRENTE                fYc         "%Y"        atualizaDataHora.php
+
+FUNCTION VALUES
+
+
+TOTAL MENS CORRENTE         NULL        NULL        gerarRelatorio.php  ok
+TOTAL MENS CORRENTE IND     NULL        NULL        gerarRelatorio.php  ok
+EXT MENS CORRENTE           NULL        NULL        gerarRelatorio.php  ok
+TOTAL ANO CORRENTE          NULL        NULL        gerarRelatorio.php  ok
+TOTAL ANO CORRENTE  IND     NULL        NULL        gerarRelatorio.php  ok
+EXT ANO CORRENTE            NULL        NULL        gerarRelatorio.php  ok
+TOTAL SEMPRE                NULL        NULL        gerarRelatorio.php
+TOTAL SEMPRE        IND     NULL        NULL        gerarRelatorio.php
+EXT SEMPRE                  NULL        NULL        gerarRelatorio.php
+
+SINCE                       NULL        NULL        gerarRelatorio.php

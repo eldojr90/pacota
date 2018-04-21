@@ -1,16 +1,13 @@
 var relatorio = "app/Controller/geraRelatorio.php";
-var atData = "app/Controller/atualizaDataHora.php"
 
 $(document).ready(function(){
 
     anosDisponiveis();
 
-    extratoAnual();
+    dadosCorrentes();
 
-    saldoAnual();
-    saldoAnualInd();
 
-    $("#pesqAno").submit(function(){
+   $("#pesqAno").submit(function(){
         
         var ano = $("#ano").val()
 
@@ -44,111 +41,44 @@ function anosDisponiveis(){
 
 }
 
-function extratoAnual(){
-    $.ajax({
-        url:"app/Controller/geraRelatorio.php",
-        type:"POST",
-        data:{tabAnual:true},
-        success:function(result){
-            
-            $("#tabAnual").html(result);
-        },
-        error:function(p1,p2,p3){
-            console.log(p1);
-            console.log(p2);
-            console.log(p3);
-        }
-    });
-}
-
-function saldoAnual(){
-
-    $.ajax({
-        url:"app/Controller/geraRelatorio.php",
-        type:"POST",
-        data:{totalAnual:true},
-        success:function(result){
-            $(".spTotalAno").html(result);
-        },
-        error:function(p1,p2,p3){
-            console.log(p1);
-            console.log(p2);
-            console.log(p3);
-        }
-    });
-
-}
-
-function saldoAnualInd(){
-
-    $.ajax({
-        url:"app/Controller/geraRelatorio.php",
-        type:"POST",
-        data:{totalAnualInd:true},
-        success:function(result){
-            $(".spTotalAnoInd").html(result);
-            console.log(result);
-        },
-        error:function(p1,p2,p3){
-            console.log(p1);
-            console.log(p2);
-            console.log(p3);
-        }
-    });
-
-}
-
-function totalAnualSrc(ano){
-
+function dadosCorrentes(){
     $.ajax({
         url:relatorio,
         type:"POST",
         data:{
-            totalAnualSrc:true,
+            dCorAnual:true
+        },
+        dataType:"json",
+        success:function(result){
+            $("#tabAnual").html(getTable(result.ty));
+            $(".spTotalAno").html(result.tty);
+            $(".spTotalAnoInd").html(result.ttyi);
+        },
+        error:function(p1,p2,p3){
+            console.log(p1);
+            console.log(p2);
+            console.log(p3);
+        }
+    });
+
+}
+
+function getDadosAno(ano){
+    $.ajax({
+        url:relatorio,
+        type:"POST",
+        data:{
+            dYSearch:true,
             year:ano
         },
+        dataType:"json",
         success:function(result){
-            $(".spTotalAno").html(result);
+            $("#anoSrc").html(ano);
+            $("#tabAnual").html(getTable(result.ys));
+            $(".spTotalAno").html(result.ttys);
+            $(".spTotalAnoInd").html(result.ttysi);
         }
-    });
-
-}
-
-function totalAnualSrcInd(ano){
-
-    $.ajax({
-        url:relatorio,
-        type:"POST",
-        data:{
-            totalAnualSrcInd:true,
-            year:ano
-        },
-        success:function(result){
-            $(".spTotalAnoInd").html(result);
-        }
-    });
-
-}
-
-
-function getDadosAno(anoRef){
-
-    $.ajax({
-        url:relatorio,
-        type:"POST",
-        data:{
-            tabAnualSrc:true,
-            year:anoRef
-        },
-        success:function(result){
-
-            $("#tabAnual").html(result);
-            $("#anoSrc").html(anoRef);
-            totalAnualSrc(anoRef);
-            totalAnualSrcInd(anoRef);
-            
-        }
-    });
+    })
 
 
 }

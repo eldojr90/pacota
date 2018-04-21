@@ -6,32 +6,310 @@ use App\Aux\Connection,
     App\Model\Comissao,
     PDO;
 
-class ComissaoDAO {
+    class ComissaoDAO {
+
+    private $con;
+
+    function __construct(){
+        
+        $this->con = Connection::getConnection();
+
+    }
     
-    function getComissao($id){
+    public function getComissao($id){
     
         $comissao = null;
         
         $sql = "select *, date_format(c_data,'%d/%m/%y %H:%m:%s') data "
                 . "from comissao where c_id = ?";
         
-        $con = Connection::getConnection();
-        
-        $ps = $con->prepare($sql);
+        $ps = $this->con->prepare($sql);
         $ps->bindParam(1, $id);
         
-        if($ps->execute()){
-        
-            if($row = $ps->fetch(PDO::FETCH_OBJ)){
+        $row = $ps->fetch(PDO::FETCH_OBJ);
 
-                $comissao = new Comissao($row->c_id, $row->data, $row->c_valor, $row->u_id);
-            
-            }
+        return new Comissao($row->c_id, $row->data, $row->c_valor, $row->u_id);
         
-        }
+    }
+
+    public function getMesCorrente($idUsuario){
         
-        return $comissao;
+        $sql = 'SELECT c_id, date_format(c_data,"%d") dia, c_valor, (c_valor/2) c_ind,
+                date_format(c_data,"%M") mes, date_format(c_data,"%Y") ano 
+                FROM comissao WHERE u_id = ? AND
+                date_format(current_date,"%m/%y") = date_format(c_data,"%m/%y")
+                ORDER BY dia DESC';
     
+        $ps = $this->con->prepare($sql);
+        $ps->bindParam(1, $idUsuario);
+        $ps->execute();
+
+        return $ps;
+        
     }
     
+    public function getAnoCorrente($idUsuario){
+    
+        $sql = 'SELECT date_format(c_data,"%M") mes, sum(c_valor) total_mes, (sum(c_valor)/2) total_ind , 
+            date_format(c_data, "%m/%Y") ms
+            FROM comissao WHERE u_id = ? AND
+            date_format(current_date,"%y") = date_format(c_data,"%y") 
+            GROUP BY mes
+            ORDER BY c_data DESC;';
+    
+        $ps = $this->con->prepare($sql);
+        $ps->bindParam(1, $idUsuario);
+        $ps->execute();
+
+        return $ps;
+
+    }
+
+    public function getSempre($idUsuario){
+        
+        $sql = 'SELECT date_format(c_data,"%Y") ano, sum(c_valor) total_ano, (sum(c_valor)/2) total_ind
+            FROM comissao WHERE u_id = ?
+            GROUP BY ano
+            ORDER BY ano DESC;';
+    
+        $ps = $this->con->prepare($sql);
+        $ps->bindParam(1, $idUsuario);
+        $ps->execute();
+        
+        $ts = [];
+
+        while($row = $ps->fetch(PDO::FETCH_OBJ)){
+            $array_temp =[
+                          "<tr><td><i class='pe-7s-date'></i>&nbsp <a href='anual.php?ys=$row->ano'>$row->ano</a></td>",
+                          "<td class='vals'>".number_format($row->total_ano, 2, ',', '.')."</td>",
+                          "<td class='vals'>".number_format($row->total_ind, 2, ',', '.')."</td></tr>"
+                        ];
+
+            array_push($ts, $array_temp);
+        }
+
+        return $ts;
+    }
+
+    public function getSince($idUsuario){
+
+        $sql = "SELECT date_format(min(c_data),'%Y') since FROM comissao WHERE u_id = ?";
+
+        $ps = $this->con->prepare($sql);
+        $ps->bindParam(1, $idUsuario);
+        $ps->execute();
+
+        $row = $ps->fetch(PDO::FETCH_OBJ);
+    
+        return "Desde $row->since";
+
+    }
+
+    public function getTotalMesCorrente($idUsuario){
+
+        $sql = 'SELECT sum(c_valor) c_total_mes '
+            . 'FROM comissao '
+            . 'WHERE (date_format(c_data,"%m/%y") = date_format(CURRENT_TIMESTAMP,"%m/%y")) '
+            . 'AND u_id = ?';
+
+        $ps = $this->con->prepare($sql);
+        $ps->bindParam(1, $idUsuario);
+        $ps->execute();
+
+        return $ps;
+
+    }
+    
+    public function getTotalMesCorrenteIndividual($idUsuario){
+
+        $sql = 'SELECT (sum(c_valor)/2) c_total_mes '
+            . 'FROM comissao '
+            . 'WHERE (date_format(c_data,"%m/%y") = date_format(CURRENT_TIMESTAMP,"%m/%y")) '
+            . 'AND u_id = ?';
+
+        $ps = $this->con->prepare($sql);
+        $ps->bindParam(1, $idUsuario);
+        $ps->execute();
+
+        return $ps;
+
+    }
+
+    public function getTotalAnoCorrente($idUsuario){
+
+        $sql = "SELECT sum(c_valor) c_total_ano
+            FROM 
+            comissao 
+            WHERE u_id = ? AND 
+            date_format(c_data,'%y') = date_format(current_date,'%y');";
+    
+        $ps = $this->con->prepare($sql);
+        $ps->bindParam(1, $idUsuario);
+        $ps->execute();
+
+        return $ps;
+
+    }
+
+    public function getTotalAnoCorrenteInd($idUsuario){
+        $sql = "SELECT (sum(c_valor)/2) c_total_ano
+            FROM 
+            comissao 
+            WHERE u_id = ? AND 
+            date_format(c_data,'%y') = date_format(current_date,'%y');";
+    
+        $ps = $this->con->prepare($sql);
+        $ps->bindParam(1, $idUsuario);
+        $ps->execute();
+
+        return $ps;
+    }
+
+    public function getTotalSempreTotalEInd($idUsuario){
+        
+        $sql = "SELECT sum(c_valor) c_total, (sum(c_valor)/2) c_total_ind
+            FROM comissao WHERE u_id = ?;";
+        
+        $ps = $this->con->prepare($sql);
+        $ps->bindParam(1, $idUsuario);
+        $ps->execute();
+
+        return $ps;
+
+    }
+
+    public function getMesDisp($ano, $idUsuario){
+        
+        $sql = "SELECT distinct date_format(c_data,'%M') mesExt, date_format(c_data,'%m') mes
+            FROM comissao 
+            WHERE date_format(c_data,'%Y') = ? AND
+            u_id = ?
+            ORDER BY c_data DESC";
+
+        $ps = $this->con->prepare($sql);
+        $ps->bindParam(1,$ano);
+        $ps->bindParam(2,$idUsuario);
+        $ps->execute();
+
+        return $ps;
+
+    }
+
+    public function getAnosDisp($idUsuario){
+
+        $sql = "SELECT distinct date_format(c_data,'%Y') ano 
+            FROM comissao 
+            WHERE u_id = ?
+            ORDER BY c_data DESC;";
+
+        $ps = $this->con->prepare($sql);
+        $ps->bindParam(1,$idUsuario);
+        $ps->execute();
+
+        return $ps;
+
+    }
+
+    public function getMesSearch($mr,$idUsuario){
+        
+        $sql = "SELECT c_id, date_format(c_data,'%d') dia, c_valor, (c_valor/2) c_ind, 
+                date_format(c_data,'%M') mes, date_format(c_data,'%Y') ano
+                FROM comissao 
+                WHERE date_format(c_data, '%m/%Y') = ? AND
+                u_id = ?
+                ORDER BY c_data DESC;";
+        
+        $ps = $this->con->prepare($sql);
+        $ps->bindParam(1,$mr);
+        $ps->bindParam(2,$idUsuario);
+        $ps->execute();
+
+        return $ps;
+
+    }
+
+    public function getAnoSearch($year,$idUsuario){
+        
+        $sql = "SELECT date_format(c_data,'%M') mes, sum(c_valor) total_mes, (sum(c_valor)/2) total_ind, date_format(c_data, '%m/%Y') ms
+                FROM comissao
+                WHERE date_format(c_data,'%Y') = ? AND
+                u_id = ?
+                group by mes
+                ORDER BY c_data DESC";
+
+        $con = Connection::getConnection();
+
+        $ps = $con->prepare($sql);
+        $ps->bindParam(1,$year);
+        $ps->bindParam(2,$idUsuario);
+        $ps->execute();
+
+        return $ps;
+    }
+
+    public function getTotalMesRef($mr,$idUsuario){
+
+        $sql = "SELECT sum(c_valor) c_total_mes
+                FROM comissao 
+                WHERE date_format(c_data, '%m/%Y') = ? AND
+                u_id = ?
+                ORDER BY c_data DESC";
+
+        $ps = $this->con->prepare($sql);
+        $ps->bindParam(1,$mr);
+        $ps->bindParam(2,$idUsuario);
+        $ps->execute();
+
+        return $ps;
+
+    }
+
+    public function getTotalMesRefInd($mr,$idUsuario){
+        
+        $sql = "SELECT (sum(c_valor)/2) c_total_mes
+                FROM comissao 
+                WHERE date_format(c_data, '%m/%Y') = ? AND
+                u_id = ?
+                ORDER BY c_data DESC";
+
+        $ps = $this->con->prepare($sql);
+        $ps->bindParam(1,$mr);
+        $ps->bindParam(2,$idUsuario);
+        $ps->execute();
+
+        return $ps;
+    }
+
+    public function getTotalAnoRef($year,$idUsuario){
+        
+        $sql = "SELECT sum(c_valor) c_total_ano 
+                FROM comissao 
+                WHERE date_format(c_data, '%Y') = ? AND
+                u_id = ?
+                ORDER BY c_data DESC";
+
+        $ps = $this->con->prepare($sql);
+        $ps->bindParam(1,$year);
+        $ps->bindParam(2,$idUsuario);
+        $ps->execute();
+
+        return $ps;
+    }
+
+    public function getTotalAnoRefInd($year,$idUsuario){
+        
+        $sql = "SELECT sum(c_valor/2) c_total_ano 
+                FROM comissao 
+                WHERE date_format(c_data, '%Y') = ? AND
+                u_id = ?
+                ORDER BY c_data DESC";
+
+        $ps = $this->con->prepare($sql);
+        $ps->bindParam(1,$year);
+        $ps->bindParam(2,$idUsuario);
+        $ps->execute();
+
+        return $ps;
+    }
+
 }

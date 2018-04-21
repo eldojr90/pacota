@@ -4,6 +4,22 @@ require_once '../../vendor/autoload.php';
 
 use App\Aux\Connection;
 
+if(isset($_POST["dates"])){
+
+    if(isset($_POST["fmc"]) && isset($_POST["fyc"])){
+
+        $mc = $_POST["fmc"];
+        $yc = $_POST["fyc"];
+
+        echo json_encode([
+            "mc"=>strftime($mc, strtotime('today')),
+            "yc"=>strftime($yc, strtotime('today'))
+        ]);
+
+    }
+
+}
+
 if(isset($_POST["formato"])){
     
     $formato = $_POST["formato"];

@@ -32,7 +32,8 @@ ob_start();
     <div class="col-md-12">
         <div class="card">
             <div class="header">
-                <h4 class="title"><b><spam id="anoSrc"><?php echo date("Y");?></spam></b>
+                <h4 class="title"><b><spam id="anoSrc"><?php echo date("Y");?></spam></b></h4>
+                <h4 class="title"><b>Total</b>
                 &nbsp-&nbsp<i class="pe-7s-cash"></i>&nbspR$&nbsp<spam class="spTotalAno"></spam></h4>
                 <h4 class="title"><b>Indiv</b>
                 &nbsp-&nbsp<i class="pe-7s-cash"></i>&nbspR$&nbsp<spam class="spTotalAnoInd"></spam></h4>
@@ -43,8 +44,8 @@ ob_start();
                 <table class="table table-hover table-striped">
                     <thead>
                         <th>Mês</th>
-                        <th>Total</th>
-                        <th>Individual</th>
+                        <th class="vals">Total R$</th>
+                        <th class="vals">Individual R$</th>
                     </thead>
                     <tbody id="tabAnual">
                         

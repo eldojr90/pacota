@@ -1,17 +1,11 @@
 var relatorio = "app/Controller/geraRelatorio.php";
-var atData = "app/Controller/atualizaDataHora.php"
+var atData = "app/Controller/atualizaDataHora.php";
 
 $(document).ready(function(){
 
     anosDisponiveis();
 
-    extratoMensal();
-
-    mesCorrente();
-
-    saldoMensal();
-
-    saldoMensalInd();
+    dadosCorrentes();
 
     $("#pesqMes").submit(function(){
         
@@ -86,156 +80,48 @@ function mesesDisponiveis(ano){
 
 }
 
-function extratoMensal(){
-    $.ajax({
-        url:relatorio,
-        type:"POST",
-        data:{tabMensal:true},
-        success:function(result){
-            
-            $("#tabMensal").html(result);
-        },
-        error:function(p1,p2,p3){
-            console.log(p1);
-            console.log(p2);
-            console.log(p3);
-        }
-    });
-}
-
-function saldoMensal(){
-    $.ajax({
-        url:relatorio,
-        type:"POST",
-        data:{totalMensal:true},
-        success:function(result){
-            
-            $(".spTotalMes").html(result);
-        },
-        error:function(p1,p2,p3){
-            console.log(p1);
-            console.log(p2);
-            console.log(p3);
-        }
-    });
-}
-
-function saldoMensalInd(){
-    $.ajax({
-        url:relatorio,
-        type:"POST",
-        data:{totalMensalInd:true},
-        success:function(result){
-            
-            $(".spTotalMesInd").html(result);
-        },
-        error:function(p1,p2,p3){
-            console.log(p1);
-            console.log(p2);
-            console.log(p3);
-        }
-    });
-}
-
-function mesCorrente(){
-    $.ajax({
-        url:atData,
-        type:"POST",
-        data:{formato:"%B/%Y"},
-        success:function(result){
-            $("#mesSrc").html('<b>'+result.charAt(0).toUpperCase()+
-                                result.slice(1)+
-                                '</b>&nbsp-&nbsp<i class="pe-7s-cash"></i>&nbspR$ <span class="spTotalMes"></span>');
-            
-        },
-        error:function(p1,p2,p3){
-            console.log(p1);
-            console.log(p2);
-            console.log(p3);
-        }
-    });
-}
-
-function retornaMesExt(mes,ano){
-
-    $.ajax({
-        url:atData,
-        type:"POST",
-        data:{
-            mesNum:mes
-        },
-        success:function(result){
-            
-            var view = result.charAt(0).toUpperCase() + result.slice(1) + "/" + ano;
-
-            $("#mesSrc").html(  '<b>'+view+
-                                '</b>&nbsp-&nbsp<i class="pe-7s-cash"></i>&nbsp'+
-                                'R$ <span class="spTotalMes"></span>');
-            
-        }
-    });
-
-}
-
-function totalMesRef(mesRef){
-
+function dadosCorrentes(){
     $.ajax({
         url:relatorio,
         type:"POST",
         data:{
-            totalMonthRef:true,
-            monthRef:mesRef
+            dCorMensal:true
         },
+        dataType:"json",
         success:function(result){
-            $(".spTotalMes").html(result);
-            console.log(result);
-        }
-
-    });
-
-}
-
-function totalMesRefInd(mesRef){
-
-    $.ajax({
-        url:relatorio,
-        type:"POST",
-        data:{
-            totalMonthRefInd:true,
-            monthRef:mesRef
+            $("#tabMensal").html(getTable(result.mc));
+            $(".spTotalMes").html(result.tmc);
+            $(".spTotalMesInd").html(result.tmci);
+            
         },
-        success:function(result){
-            $(".spTotalMesInd").html(result);
-            console.log(result);
+        error:function(p1,p2,p3){
+            console.log(p1);
+            console.log(p2);
+            console.log(p3);
         }
-
     });
-
 }
 
 function getDadosMesRef(mes,ano){
     
     mesRef = mes + "/" + ano;
 
-        console.log(mesRef);
-
         $.ajax({
             url:relatorio,
             type:"POST",
             data:{
                 tabMensalSrc:true,
-                monthRef:mesRef
+                monthRef:mesRef,
+                mes:mes
             },
+            dataType:"json",
             success:function(result){
+                $("#mesSrc").html(result.m.slice(0,3) + "/" + ano);
+                $("#tabMensal").html(getTable(result.ms));
+                $(".spTotalMes").html(result.tms);
+                $(".spTotalMesInd").html(result.tmsi);
                 
-              if(result != ""){
-                $("#tabMensal").html(result);
-                console.log(result);
-                retornaMesExt(mes,ano);
-                totalMesRef(mesRef);
-                totalMesRefInd(mesRef);
-              }    
-            
+                
             }
         });
 

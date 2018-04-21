@@ -21,7 +21,7 @@ ob_start();
     <div class="col-md-12">
         <div class="card">
             <div class="header">
-                <h4 class="title"><b>Mensal</b>&nbsp&nbsp&nbsp<span id="mesCorrente"></span></h4>
+                <h4 class="title"><b>Mensal</b>&nbsp&nbsp&nbsp<span id="mesCorrente"><?php echo date("M/Y");?></span></h4>
                 <h4 class="title"><b>Total</b>&nbsp-&nbsp
                     <i class="pe-7s-cash"></i>&nbspR$&nbsp<span class="spTotalMes"></span>
                 </h4>
@@ -34,8 +34,8 @@ ob_start();
                 <table id="ms-div" class="table table-hover table-striped">
                     <thead>
                         <th>Dia</th>
-                        <th>Total</th>
-                        <th>Individual</th>
+                        <th class='vals'>Total</th>
+                        <th class='vals'>Individual</th>
                         <th></th>
                     </thead>
                     <tbody id="tabMensal">
@@ -49,7 +49,7 @@ ob_start();
     <div class="col-md-6">
         <div class="card">
             <div class="header">
-                <h4 class="title"><b>Anual</b>&nbsp&nbsp&nbsp<span id="anoCorrente"></span>
+                <h4 class="title"><b>Anual</b>&nbsp&nbsp&nbsp<span id="anoCorrente"><?php echo date("Y");?></span>
                 <h4 class="title"><b>Total</b>&nbsp-&nbsp<i class="pe-7s-cash"></i>&nbspR$&nbsp<span class="spTotalAno"></span></h4>
                 <h4 class="title"><b>Indiv</b>&nbsp-&nbsp<i class="pe-7s-cash"></i>&nbspR$&nbsp<span class="spTotalAnoInd"></span></h4>
                 
@@ -59,8 +59,8 @@ ob_start();
                 <table class="table table-hover table-striped">
                     <thead>
                         <th>Mês</th>
-                        <th>Total</th>
-                        <th>Individual</th>
+                        <th class='vals'>Total</th>
+                        <th class='vals'>Individual</th>
                     </thead>
                     <tbody id="tabAnual">
                         
@@ -74,16 +74,21 @@ ob_start();
         <div class="card">
             <div class="header">
                 <h4 class="title"><b>Geral</b>&nbsp&nbsp&nbsp<span id="since"></span>
-                <h4 class="title"><b>Total</b>&nbsp-&nbsp<i class="pe-7s-cash"></i>&nbspR$&nbsp<span class="spTotalSempre"></span></h4>
-                <h4 class="title"><b>Indiv</b>&nbsp-&nbsp<i class="pe-7s-cash"></i>&nbspR$&nbsp<span class="spTotalSempreInd"></span></h4>
+                <h4 class="title"><b>Total</b>&nbsp-&nbsp<i class="pe-7s-cash">
+                    </i>&nbspR$&nbsp<span class="spTotalSempre"></span>
+                </h4>
+                <h4 class="title">
+                    <b>Indiv</b>&nbsp-&nbsp<i class="pe-7s-cash"></i>
+                    &nbspR$&nbsp<span class="spTotalSempreInd"></span>
+                </h4>
             </div>
             
             <div class="content table-responsive table-full-width">
                 <table class="table table-hover table-striped">
                     <thead>
                         <th>Ano</th>
-                        <th>Total</th>
-                        <th>Individual</th>
+                        <th class='vals'>Total</th>
+                        <th class='vals'>Individual</th>
                     </thead>
                     <tbody id="tabSemp">
                         

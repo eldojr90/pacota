@@ -27,12 +27,13 @@ class Connection{
 
     public static function argsData(){
 
-        $dbname = "";
-        $username = "";
+        $dbname = "eliana";
+        $username = "root";
         $password = "";
+        $charset = "utf8";
 
         return [
-            'dsn'=>'mysql:host=localhost;dbname='.$dbname.';',
+            'dsn'=>"mysql:host=localhost;dbname=$dbname;charset=$charset",
             'username'=>$username,
             'password'=>$password
         ];

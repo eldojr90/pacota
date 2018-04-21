@@ -12,3 +12,9 @@ function notificao(icone,mensagem,tipo){
         }
     });
 }
+
+function getTable(array){
+
+    return (JSON.stringify(array));
+
+}

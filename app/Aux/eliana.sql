@@ -1,5 +1,7 @@
 CREATE SCHEMA eliana DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ;
 
+USE eliana;
+
 create table usuario(  
     u_id int not null primary key auto_increment,
     u_nome varchar(150) not null,

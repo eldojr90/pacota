@@ -42,7 +42,11 @@ ob_start();
     <div class="col-md-12">
         <div class="card">
             <div class="header">
-                <h4 class="title" id="mesSrc"></h4>
+                <h4 class="title"><b><span id="mesSrc"><?php echo date("M/Y")?></span></b>
+                <h4 class="title">
+                    <b>Total</b>&nbsp-&nbsp
+                    <i class="pe-7s-cash"></i>&nbspR$&nbsp<span class="spTotalMes"></span>
+                </h4>
                 <h4 class="title"><b>Indiv</b>&nbsp-&nbsp
                     <i class="pe-7s-cash"></i>&nbspR$&nbsp<span class="spTotalMesInd"></span>
                 </h4>
@@ -52,8 +56,8 @@ ob_start();
                 <table class="table table-hover table-striped">
                     <thead>
                         <th>Dia</th>
-                        <th>Total</th>
-                        <th>Individual</th>
+                        <th class="vals">Total R$</th>
+                        <th class="vals">Individual R$</th>
                         <th></th>
                     </thead>
                     <tbody id="tabMensal">
