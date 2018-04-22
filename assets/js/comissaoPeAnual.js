@@ -4,9 +4,6 @@ $(document).ready(function(){
 
     anosDisponiveis();
 
-    dadosCorrentes();
-
-
    $("#pesqAno").submit(function(){
         
         var ano = $("#ano").val()
@@ -21,6 +18,10 @@ $(document).ready(function(){
         var anoRef = $("#ys").val();
 
         getDadosAno(anoRef);
+
+    }else{
+
+        dadosCorrentes();
 
     }
 

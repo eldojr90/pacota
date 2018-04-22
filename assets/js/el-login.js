@@ -10,12 +10,11 @@ $(document).ready(function(){
 });
 
 function login(){
+    
     $("#flogin").submit(function(){
-        console.log("submit ok!");
+        
         var us_login = $("#usuario").val();
         var us_senha = $("#pwd").val();
-        console.log("login: "+us_login);
-        console.log("senha: "+us_senha);
         
         $.ajax({
                 url:"app/Controller/validaLogin.php",
@@ -47,7 +46,9 @@ function login(){
                   console.log(errorThrown);
             }
         });
+
         return false;
+        
     });
  
 }
@@ -73,7 +74,7 @@ function restoreAccount(){
 
                 if(result != "-1" || result != -1){
 
-                    if(!result){
+                    if(!result || result == 0 || result == "0"){
 
                         notificao("gleam","Erro interno ao enviar email","danger");
                         
@@ -135,8 +136,6 @@ function verififyUsernameOrEmail(){
 }
 
 function ajustes(){
-
-    
 
     $("a").click(function(e){
 
