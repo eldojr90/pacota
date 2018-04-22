@@ -158,12 +158,12 @@ if(isset($_POST["rAcc"])){
             $mail->Port = 587;
             $mail->SMTPAuth = true;
             $mail->SMTPSecure = "tls";
-            $mail->Username = 'eldojr90';
-            $mail->Password = 'eldo010612';
+            $mail->Username = '';
+            $mail->Password = '';
             
             $mail->CharSet = "utf-8";
 
-            $mail->From = "eldojr90@gmail.com";
+            $mail->From = "";
             $mail->FromName = "Admin Pacota";
             $mail->Subject = "Pacota - Recuperação de Conta";
             $mail->Body = $mensagem;
