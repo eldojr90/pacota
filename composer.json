@@ -1,0 +1,18 @@
+{
+    "name": "eldojr90/htdocs",
+    "description": "app web para gerenciar comissões para garçons",
+    "require": {
+        "phpmailer/phpmailer": "^6.0"
+    },
+    "authors": [
+        {
+            "name": "Eldo Jr.",
+            "email": "eldojr90@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "App\\":"app"
+        }
+    }
+}

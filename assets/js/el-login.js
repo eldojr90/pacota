@@ -70,23 +70,20 @@ function restoreAccount(){
                 notificao("hourglass","Aguarde...","info");
             },
             success:function(result){
+
                 console.log(result);
 
-                if(result != "-1" || result != -1){
-
-                    if(!result || result == 0 || result == "0"){
-
-                        notificao("gleam","Erro interno ao enviar email","danger");
-                        
-                    }else{
-                        
-                        notificao("mail","Confira seu email "+result+" e recupere sua conta!","success");    
-
-                    }
-
-                }else{
-
+                if(result == -1 || result == "-1"){
+                    
                     notificao("gleam","Não existe conta para o email/usuário informado!","danger");
+                    
+                }else{
+                    
+                    if(result.indexOf("@") != -1 && result.indexOf(".com") != -1){
+                        notificao("gleam","Erro interno ao enviar email","danger");
+                    }else{
+                        notificao("mail","Confira seu email "+result+" e recupere sua conta!","success");    
+                    }
 
                 }
 

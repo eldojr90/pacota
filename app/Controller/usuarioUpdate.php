@@ -4,7 +4,7 @@ require_once '../../vendor/autoload.php';
 
 use App\Model\DAO\UsuarioDAO,
     App\Model\Usuario,
-    App\PHPMailer\PHPMailer;
+    PHPMailer\PHPMailer\PHPMailer;
 
 $id = null;
 
@@ -151,29 +151,24 @@ if(isset($_POST["rAcc"])){
             $mail = new PHPMailer();
             
             $mail->isSMTP();
-            $mail->isHTML();
+            $mail->isHTML(true);
             $mail->addAddress($usuario->getEmail());
-
-            $mail->CharSet = "utf-8";
-            $mail->Host = "smtp.gmail.com";
-            $mail->From = "eldojr90@gmail.com";
-            $mail->FromName = "Admin Pacota";
+            
+            $mail->Host = 'smtp.gmail.com';
+            $mail->Port = 587;
             $mail->SMTPAuth = true;
+            $mail->SMTPSecure = "tls";
             $mail->Username = 'eldojr90';
             $mail->Password = 'eldo010612';
             
+            $mail->CharSet = "utf-8";
+
+            $mail->From = "eldojr90@gmail.com";
+            $mail->FromName = "Admin Pacota";
             $mail->Subject = "Pacota - Recuperação de Conta";
             $mail->Body = $mensagem;
 
-            if($mail->send()){
-
-                echo $usuario->getEmail();
-
-            }else{
-
-                echo $mail->ErrorInfo;
-
-            }
+            echo ($mail->send())?$usuario->getEmail():$mail->ErrorInfo;
 
             $mail->ClearAllRecipients();
             $mail->ClearAttachments();
