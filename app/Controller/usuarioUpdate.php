@@ -3,7 +3,8 @@
 require_once '../../vendor/autoload.php';
 
 use App\Model\DAO\UsuarioDAO,
-    App\Model\Usuario;
+    App\Model\Usuario,
+    PHPMailer\PHPMailer\PHPMailer;
 
 $id = null;
 
@@ -134,14 +135,43 @@ if(isset($_POST["rAcc"])){
 
             $dns = $_SERVER['SERVER_NAME'];
 
-            $mensagem = "Olá ".$usuario->getNome().", \n\nsolicitou recuperação de senha? 
-            \nAcesse: http://$dns/index.php?token=$token";
+            $mensagem = 
+                "<meta charset='utf-8' />
+                <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css'>"
+                ."Olá ".$usuario->getNome().",
+                <br />solicitou recuperação de senha? 
+                <br />Acesse: 
+                <br />
+                <br />
+                <a href='http://$dns/index.php?token=$token' 
+                    align='center'>"
+                ."Recuperar Conta"         
+                ."</a>";
 
-            $to = $usuario->getNome()."<".$usuario->getEmail().">";
-            $subject = "PACOTA - Recuperação de Senha";
-            $header = "From: Admin Pacota <eldojr90@gmail.com>";
+            $mail = new PHPMailer();
+            
+            $mail->isSMTP();
+            $mail->isHTML(true);
+            $mail->addAddress($usuario->getEmail());
+            
+            $mail->Host = 'smtp.gmail.com';
+            $mail->Port = 587;
+            $mail->SMTPAuth = true;
+            $mail->SMTPSecure = "tls";
+            $mail->Username = '';
+            $mail->Password = '';
+            
+            $mail->CharSet = "utf-8";
 
-            echo (mail($to,$subject,$mensagem,$header))?$usuario->getEmail():false;
+            $mail->From = "";
+            $mail->FromName = "Admin Pacota";
+            $mail->Subject = "Pacota - Recuperação de Conta";
+            $mail->Body = $mensagem;
+
+            echo ($mail->send())?$usuario->getEmail():$mail->ErrorInfo;
+
+            $mail->ClearAllRecipients();
+            $mail->ClearAttachments();
 
         }else{
 
@@ -179,8 +209,8 @@ if(isset($_POST["upAcc"])){
                 echo "ERRO NA ALTERAÇÃO DA SENHA DO USUÁRIO. (C/ TOKEN)";
 
             }
-        }
 
+        }
 
     }
 
@@ -212,9 +242,6 @@ if(isset($_GET["tk_rq"])){
         header($redirect);
 
 }
-
-
-
 
 function encryptMD5($str){
     return strtoupper(md5(trim($str)));

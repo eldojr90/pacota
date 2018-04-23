@@ -5,8 +5,6 @@ $(document).ready(function(){
 
     anosDisponiveis();
 
-    dadosCorrentes();
-
     $("#pesqMes").submit(function(){
         
         var mes = $("#mes").val();
@@ -44,6 +42,10 @@ $(document).ready(function(){
 
         getDadosMesRef(mes,ano);
         
+    }else{
+        
+        dadosCorrentes();
+
     }
 
 });
