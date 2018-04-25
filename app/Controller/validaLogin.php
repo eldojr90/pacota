@@ -3,7 +3,8 @@
 require_once '../../vendor/autoload.php';
 
 use App\Aux\Connection,
-    App\Model\DAO\UsuarioDAO;
+    App\Model\DAO\UsuarioDAO,
+    App\Util\Crypt;
 
 $ud = new UsuarioDAO();
 
@@ -11,26 +12,18 @@ if(isset($_REQUEST)){
     
     if(isset($_POST["login"])&&isset($_POST["senha"])){
         
-        $login = $_POST["login"];
-        $email2 = $login.".br";
-        $senha = strtoupper(md5($_POST["senha"]));
-        $con = Connection::getConnection();
-        $sql = "select u_id from usuario where ( u_nome_de_usuario = ? or (u_email = ? or u_email = ?) ) and u_senha = ?";
-        $ps = $con->prepare($sql);
-        $ps->bindParam(1, $login);
-        $ps->bindParam(2, $login);
-        $ps->bindParam(3, $email2);
-        $ps->bindParam(4, $senha);
-        $ps->execute();
+        $usemail = $_POST["login"];
+        $pwd = Crypt::encryptMD5($_POST["senha"]);
+
+        $ps = $ud->login($usemail,$pwd);
         
-        $usuario = null;
-            
         if($rs = $ps->fetch(PDO::FETCH_OBJ)){
                        
             session_start();
             
             $_SESSION["idUsuario"] =  $rs->u_id;
-                echo 1;
+            
+            echo 1;
                 
         }
         
@@ -39,6 +32,7 @@ if(isset($_REQUEST)){
     if(isset($_POST["token"])){
         
         $token = $_POST["token"];
+        
         $u = $ud->findUserBytoken($token);
             
         if(isset($u)){

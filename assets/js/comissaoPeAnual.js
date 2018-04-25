@@ -51,9 +51,18 @@ function dadosCorrentes(){
         },
         dataType:"json",
         success:function(result){
-            $("#tabAnual").html(getTable(result.ty));
-            $(".spTotalAno").html(result.tty);
-            $(".spTotalAnoInd").html(result.ttyi);
+
+            var count = Object.keys(result.ty).length;
+
+            if(count > 0){
+
+                $("#anoSrc").html(result.y);
+                $("#tabAnual").html(getTable(result.ty));
+                $(".spTotalAno").html(result.tty);
+                $(".spTotalAnoInd").html(result.ttyi);
+                
+            }
+
         },
         error:function(p1,p2,p3){
             console.log(p1);
@@ -74,10 +83,22 @@ function getDadosAno(ano){
         },
         dataType:"json",
         success:function(result){
-            $("#anoSrc").html(ano);
-            $("#tabAnual").html(getTable(result.ys));
-            $(".spTotalAno").html(result.ttys);
-            $(".spTotalAnoInd").html(result.ttysi);
+            
+            var count = Object.keys(result.ys).length;
+
+            console.log(count);
+
+            if(count > 0){
+
+                $("#anoSrc").html(ano);
+                $("#tabAnual").html(getTable(result.ys));
+                $(".spTotalAno").html(result.ttys);
+                $(".spTotalAnoInd").html(result.ttysi);
+
+            }else{
+                ntErro("Não existem registros para o ano informado!");
+            }
+            
         }
     })
 

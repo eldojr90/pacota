@@ -24,7 +24,7 @@
     }
 }
 
-#anoCorrente, #mesCorrente, #since {
+#anoCorrente, #mesCorrente, #since, #mesSrc, #anoSrc {
     color: cornflowerblue !important;
     font-weight: bold !important;
 }

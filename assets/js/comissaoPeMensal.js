@@ -91,10 +91,20 @@ function dadosCorrentes(){
         },
         dataType:"json",
         success:function(result){
-            $("#tabMensal").html(getTable(result.mc));
-            $(".spTotalMes").html(result.tmc);
-            $(".spTotalMesInd").html(result.tmci);
-            
+
+            var count = Object.keys(result.mc).length;
+
+            if(count > 0){
+
+                var mes = result.m.slice(0,3)+"/"+result.y;
+
+                $("#mesSrc").html(mes);
+                $("#tabMensal").html(getTable(result.mc));
+                $(".spTotalMes").html(result.tmc);
+                $(".spTotalMesInd").html(result.tmci);
+
+            }
+
         },
         error:function(p1,p2,p3){
             console.log(p1);
@@ -118,11 +128,21 @@ function getDadosMesRef(mes,ano){
             },
             dataType:"json",
             success:function(result){
-                $("#mesSrc").html(result.m.slice(0,3) + "/" + ano);
-                $("#tabMensal").html(getTable(result.ms));
-                $(".spTotalMes").html(result.tms);
-                $(".spTotalMesInd").html(result.tmsi);
+          
+                var count = Object.keys(result.ms).length;
+
+                console.log(count);
+
+                if(count > 0){
+
+                    $("#mesSrc").html(result.m.slice(0,3) + "/" + ano);
+                    $("#tabMensal").html(getTable(result.ms));
+                    $(".spTotalMes").html(result.tms);
+                    $(".spTotalMesInd").html(result.tmsi);
                 
+                }else{
+                    ntErro("Não existem registros para o mês informado!");
+                }
                 
             }
         });

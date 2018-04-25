@@ -42,7 +42,7 @@ ob_start();
     <div class="col-md-12">
         <div class="card">
             <div class="header">
-                <h4 class="title"><b><span id="mesSrc"><?php echo date("M/Y")?></span></b>
+                <h4 class="title"><b><span id="mesSrc"></span></b>
                 <h4 class="title">
                     <b>Total</b>&nbsp-&nbsp
                     <i class="pe-7s-cash"></i>&nbspR$&nbsp<span class="spTotalMes"></span>

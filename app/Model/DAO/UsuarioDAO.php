@@ -8,7 +8,7 @@ use App\Aux\Connection,
     App\Util\Crypt,
     PDO;
 
-class UsuarioDAO {
+    class UsuarioDAO {
 
     private $con;
     
@@ -37,6 +37,26 @@ class UsuarioDAO {
         
         return $ps->execute();
 
+
+    }
+
+    public function login($usemail,$pwd){
+        
+        $email2 = $usemail.".br";
+        
+        $sql = "SELECT u_id 
+                FROM usuario 
+                WHERE ( u_nome_de_usuario = ? or (u_email = ? or u_email = ?) ) 
+                and u_senha = ?";
+        
+        $ps = $this->con->prepare($sql);
+        $ps->bindParam(1, $usemail);
+        $ps->bindParam(2, $usemail);
+        $ps->bindParam(3, $email2);
+        $ps->bindParam(4, $pwd);
+        $ps->execute();
+
+        return $ps;
 
     }
 
@@ -196,7 +216,7 @@ class UsuarioDAO {
         return ($ps->fetch(PDO::FETCH_OBJ))->total == 1;
 
     }
-
+    
     public function genTokenByUser(Usuario $u){
 
         $str = $u->getId().":".$u->getNome_de_usuario().":".$u->getEmail();

@@ -150,14 +150,20 @@ if(isset($_POST["rAcc"])){
 
             $mail = new PHPMailer();
             
+            /* 
+            
+                Configurar de acordo com seu servidor de email 
+            
+            */
+            
             $mail->isSMTP();
             $mail->isHTML(true);
             $mail->addAddress($usuario->getEmail());
             
-            $mail->Host = 'smtp.gmail.com';
-            $mail->Port = 587;
-            $mail->SMTPAuth = true;
-            $mail->SMTPSecure = "tls";
+            $mail->Host = '';
+            $mail->Port = 25;
+            $mail->SMTPAuth = false;
+            $mail->SMTPSecure = "";
             $mail->Username = '';
             $mail->Password = '';
             

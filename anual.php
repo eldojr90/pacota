@@ -32,7 +32,7 @@ ob_start();
     <div class="col-md-12">
         <div class="card">
             <div class="header">
-                <h4 class="title"><b><spam id="anoSrc"><?php echo date("Y");?></spam></b></h4>
+                <h4 class="title"><b><spam id="anoSrc"></spam></b></h4>
                 <h4 class="title"><b>Total</b>
                 &nbsp-&nbsp<i class="pe-7s-cash"></i>&nbspR$&nbsp<spam class="spTotalAno"></spam></h4>
                 <h4 class="title"><b>Indiv</b>

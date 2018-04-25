@@ -21,8 +21,6 @@ $(document).ready(function(){
 
         }    
 
-        console.log(dados);
-
         $.ajax({
             url:"app/Controller/comissaoInsert.php",
             type:"POST",
@@ -49,8 +47,6 @@ $(document).ready(function(){
                         break;    
                 }
 
-                console.log(retorno);
-
                 var icone = (retorno !== "1")?'pe-7s-gleam':'pe-7s-like2';
                 var tipo = (retorno !== "1")?"danger":"success";
                 
@@ -74,7 +70,7 @@ $(document).ready(function(){
     ajustes();
 
     $("#data-date").change(function(){
-
+    
         validaData();
 
     });
@@ -184,8 +180,6 @@ function verificaData(){
         },
         success:function(result){
 
-            console.log(result);
-
             if(result == 0){
 
                 optNo(false);
@@ -211,7 +205,7 @@ function validaData(){
     
     var dd = $("#data-date").val();
 
-    if(!$("#rYes").prop("checked")){
+    if(!$("#rYes").prop("checked") && dd.length > 0){
 
         $.ajax({
             
@@ -223,18 +217,13 @@ function validaData(){
             },
             success:function(result){
                 
-                console.log(result);
-                
                 if(result){
                     
                     notificao("gleam","Já existe comissão com a data informada!","danger");
                     $("#data-date").focus();
 
-                }else{
-                    
-                    $("#comissao").focus();
-
                 }
+
             },
             error:function(p1,p2,p3){
                 console.log(p1);

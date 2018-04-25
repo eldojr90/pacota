@@ -13,6 +13,10 @@ function notificao(icone,mensagem,tipo){
     });
 }
 
+function ntErro(mensagem){
+    notificao("gleam",mensagem,"danger");
+}
+
 function getTable(array){
 
     return (JSON.stringify(array));

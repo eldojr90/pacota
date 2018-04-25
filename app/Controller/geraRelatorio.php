@@ -4,7 +4,8 @@
 require_once '../../vendor/autoload.php';
 
 use App\Model\DAO\ComissaoDAO,
-    App\Model\DAO\DateDAO;
+    App\Model\DAO\DateDAO,
+    PDO;
 
 session_start();
 
@@ -14,46 +15,60 @@ $dd = new DateDAO();
 $idUsuario = $_SESSION["idUsuario"];
 
 if(isset($_POST["vals"])){
-    
-    $ps = $cd->getMesCorrente($idUsuario);
 
+    //MES CORRENTE
+
+    $ps = $cd->getMesCorrente($idUsuario);
     $mc = populaTabMensal($ps);
 
-    $ps = $cd->getTotalMesCorrente($idUsuario);
-    $tmc = totalMensal($ps);
+    $ps = $cd->getTMesCorrente($idUsuario);
+    $row = $ps->fetch(PDO::FETCH_OBJ);
     
-    $ps = $cd->getTotalMesCorrenteIndividual($idUsuario);
-    $tmci = totalMensal($ps);
+    $tmc = number_format($row->c_total_mes,2, ',', '.');
+    $tmci = number_format($row->c_total_mes_ind,2, ',', '.');
+
+    $month = $row->mes;
+
+    //ANO CORRENTE
 
     $ps = $cd->getAnoCorrente($idUsuario);
     $tyc = populaTabAnual($ps);
 
-    $ps = $cd->getTotalAnoCorrente($idUsuario);
-    $ttyc = totalAnual($ps);
+    $ps = $cd->getTAnoCorrente($idUsuario);
+    $row = $ps->fetch(PDO::FETCH_OBJ);
+    
+    $ttyc = number_format($row->c_total_ano,2, ',', '.');
+    $ttyci = number_format($row->c_total_ano_ind,2, ',', '.');
 
-    $ps = $cd->getTotalAnoCorrenteInd($idUsuario);
-    $ttyci = totalAnual($ps);
+    $year = $row->ano;
+
+    //DE SEMPRE
 
     $ts = $cd->getSempre($idUsuario);
 
-    $ps = $cd->getTotalSempreTotalEInd($idUsuario);
+    $ps = $cd->getTSempre($idUsuario);
     $row = $ps->fetch(PDO::FETCH_OBJ);
+    
     $tts = number_format($row->c_total, 2, ',', '.');
     $ttsi = number_format($row->c_total_ind, 2, ',', '.');
     
     $since =  $cd->getSince($idUsuario);
 
     echo json_encode([
-        "ttm"=>$tmc,
-        "tm"=>$mc,
-        "sc"=>$since,
-        "ttmi"=>$tmci,
-        "ty"=>$tyc,
-        "tty"=>$ttyc,
-        "ttyi"=>$ttyci,
-        "tf"=>$ts,
-        "ttf"=>$tts, 
-        "ttfi"=>$ttsi
+       "m"=> $month,
+       "ttm"=>$tmc,
+       "ttmi"=>$tmci,
+       "y"=>$year,
+       "ty"=>$tyc,
+       "tty"=>$ttyc,
+       "ttyi"=>$ttyci,
+       "sc"=>$since,
+       "tf"=>$ts,
+       "ttf"=>$tts, 
+       "ttfi"=>$ttsi, 
+       "tm"=>$mc
+        /* 
+        */
     ]);
 
 }
@@ -61,16 +76,20 @@ if(isset($_POST["vals"])){
 if(isset($_POST["dCorMensal"])){
 
     $ps = $cd->getMesCorrente($idUsuario);
-
     $mc = populaTabMensal($ps);
 
-    $ps = $cd->getTotalMesCorrente($idUsuario);
-    $tmc = totalMensal($ps);
+    $ps = $cd->getTMesCorrente($idUsuario);
+    $row = $ps->fetch(PDO::FETCH_OBJ);
     
-    $ps = $cd->getTotalMesCorrenteIndividual($idUsuario);
-    $tmci = totalMensal($ps);
+    $tmc = number_format($row->c_total_mes,2, ',', '.');
+    $tmci = number_format($row->c_total_mes_ind,2, ',', '.');
+
+    $month = $row->mes;
+    $year = $row->ano;
 
     echo json_encode([
+        "m"=>$month,
+        "y"=>$year,
         "mc"=>$mc,
         "tmc"=>$tmc,
         "tmci"=>$tmci
@@ -81,18 +100,18 @@ if(isset($_POST["dCorMensal"])){
 if(isset($_POST["dCorAnual"])){
 
     $ps = $cd->getAnoCorrente($idUsuario);
-
     $tabAnual = populaTabAnual($ps);
 
-    $ps = $cd->getTotalAnoCorrente($idUsuario);
+    $ps = $cd->getTAnoCorrente($idUsuario);
+    $row = $ps->fetch(PDO::FETCH_OBJ);
+    
+    $tty = number_format($row->c_total_ano,2, ',', '.');
+    $ttyi = number_format($row->c_total_ano_ind,2, ',', '.');
 
-    $tty = totalAnual($ps);
-
-    $ps = $cd->getTotalAnoCorrenteInd($idUsuario);
-
-    $ttyi = totalAnual($ps);
+    $year = $row->ano;
 
     echo json_encode([
+        "y"=>$year,
         "ty"=>$tabAnual,
         "tty"=>$tty,
         "ttyi"=>$ttyi
@@ -139,21 +158,20 @@ if(isset($_POST["tabMensalSrc"])){
         $mr = $_POST["monthRef"];
         $m = $_POST["mes"];
 
-        $ps = $cd->getMesSearch($mr,$idUsuario);
-
-        $ms = populaTabMensal($ps);
-        $mes = $dd->dateSearch($m);
-
-        $ps = $cd->getTotalMesRef($mr,$idUsuario);
-
-        $tms = totalMensal($ps);
-
-        $ps = $cd->getTotalMesRefInd($mr,$idUsuario);
-
-        $tmsi = totalMensal($ps);
+        $ms = populaTabMensal($cd->getMesSearch($mr,$idUsuario));
+    
+        $ps = $cd->getTMesRef($mr,$idUsuario);
+        $row = $ps->fetch(PDO::FETCH_OBJ);
+        
+        $tms = number_format($row->c_total_mes,2, ',', '.');
+        $tmsi = number_format($row->c_total_mes_ind,2, ',', '.');
+    
+        $month = $row->mes;
+        $year = $row->ano;
 
         echo json_encode([
-            "m" => $mes,
+            "m" => $month,
+            "y" => $year,
             "ms" => $ms,
             "tms" => $tms,
             "tmsi" => $tmsi
@@ -171,11 +189,16 @@ if(isset($_POST["dYSearch"])){
 
         $ys = populaTabAnual($cd->getAnoSearch($year,$idUsuario));
 
-        $ttys = totalAnual($cd->getTotalAnoRef($year,$idUsuario));
+        $ps = $cd->getTAnoRef($year,$idUsuario);
+        $row = $ps->fetch(PDO::FETCH_OBJ);
+    
+        $ttys = number_format($row->c_total_ano,2, ',', '.');
+        $ttysi = number_format($row->c_total_ano_ind,2, ',', '.');
 
-        $ttysi = totalAnual($cd->getTotalAnoRefInd($year,$idUsuario));
+        $y = $row->ano;
 
         echo json_encode([
+            "y"=>$y,
             "ys"=>$ys,
             "ttys"=>$ttys,
             "ttysi"=>$ttysi
@@ -187,12 +210,8 @@ if(isset($_POST["dYSearch"])){
 
 function populaTabMensal($st){
     $content = [];
-    $mes = "";
     
     while($row = $st->fetch(PDO::FETCH_OBJ)){
-        $mes = [
-            "mes"=>$row->mes
-        ];
         
         $array_temp =["<tr>",
                     "<td><i class='pe-7s-date'></i>&nbsp$row->dia</td>
@@ -205,8 +224,6 @@ function populaTabMensal($st){
         array_push($content,$array_temp);
     }
 
-    array_push($content,$mes);
-
     return $content;
 }
 
@@ -216,11 +233,9 @@ function populaTabAnual($st){
     
     while($row = $st->fetch(PDO::FETCH_OBJ)){
 
-        $mes = strtoupper(substr($row->mes,0,1)).substr($row->mes,1);
-
         $array_temp = [
                         "<tr>",
-                        "<td><i class='pe-7s-date'></i>&nbsp<a href='mensal.php?ms=$row->ms'>$mes</a></td>",
+                        "<td><i class='pe-7s-date'></i>&nbsp<a href='mensal.php?ms=$row->ms'>$row->mes</a></td>",
                         "<td class='vals'>".number_format($row->total_mes, 2, ',', '.')."</td>",
                         "<td class='vals'>".number_format($row->total_ind, 2, ',', '.')."</td><td></td></tr>"
                     ];
@@ -233,18 +248,9 @@ function populaTabAnual($st){
 
 }
 
-function totalMensal($st){
-    $row = $st->fetch(PDO::FETCH_OBJ);
-    return number_format($row->c_total_mes, 2, ',', '.');
-}
-
-function totalAnual($st){
-    $row = $st->fetch(PDO::FETCH_OBJ);
-    return number_format($row->c_total_ano, 2, ',', '.');
-}
-
 function imprimeArray($array){
     foreach($array as $linha){
         echo $linha;
     }
 }
+
