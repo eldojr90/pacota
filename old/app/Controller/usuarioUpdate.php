@@ -3,8 +3,7 @@
 require_once '../../vendor/autoload.php';
 
 use App\Model\DAO\UsuarioDAO,
-    App\Model\Usuario,
-    PHPMailer\PHPMailer\PHPMailer;
+    App\Model\Usuario;
 
 $id = null;
 
@@ -121,73 +120,6 @@ if(isset($_POST["vPw"])){
 
 }
 
-if(isset($_POST["rAcc"])){
-
-    if(isset($_POST["usemail"])){
-
-        $usemail = $_POST["usemail"];
-
-        if($ud->verifyUserEmail($usemail)){
-
-            $usuario = $ud->findUserByUsEmail($usemail);
-
-            $token = $ud->genTokenByUser($usuario);
-
-            $dns = $_SERVER['SERVER_NAME'];
-
-            $mensagem = 
-                "<meta charset='utf-8' />
-                <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css'>"
-                ."Olá ".$usuario->getNome().",
-                <br />solicitou recuperação de senha? 
-                <br />Acesse: 
-                <br />
-                <br />
-                <a href='http://$dns/index.php?token=$token' 
-                    align='center'>"
-                ."Recuperar Conta"         
-                ."</a>";
-
-            $mail = new PHPMailer();
-            
-            /* 
-            
-                Configurar de acordo com seu servidor de email 
-            
-            */
-            
-            $mail->isSMTP();
-            $mail->isHTML(true);
-            $mail->addAddress($usuario->getEmail());
-            
-            $mail->Host = '';
-            $mail->Port = 25;
-            $mail->SMTPAuth = false;
-            $mail->SMTPSecure = "";
-            $mail->Username = '';
-            $mail->Password = '';
-            
-            $mail->CharSet = "utf-8";
-
-            $mail->From = "";
-            $mail->FromName = "Admin Pacota";
-            $mail->Subject = "Pacota - Recuperação de Conta";
-            $mail->Body = $mensagem;
-
-            echo ($mail->send())?$usuario->getEmail():$mail->ErrorInfo;
-
-            $mail->ClearAllRecipients();
-            $mail->ClearAttachments();
-
-        }else{
-
-            echo -1;
-
-        }
-
-    }
-
-}
 
 if(isset($_POST["upAcc"])){
 
